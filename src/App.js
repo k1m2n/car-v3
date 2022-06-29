@@ -1,14 +1,17 @@
 /*eslint-disable*/
-import './App.css';
+import './App.scss';
 import CarForm from './components/CarForm';
 import Header from './components/Header';
 import {useEffect,useState} from "react";
 import CarList from './components/CarList';
+import {BrowserRouter as Router, Routes,Route,Link} from 'react-router-dom'
+import UpdateCar from './components/UpdateCar';
 
 function App() {
 
   const LOCAL_STORAGE_KEY="react-park-list";
   const [cars, setCars]=useState([]);
+  const[updateId,setUpdateId]=useState("");
 
 
   useEffect(()=>{
@@ -26,7 +29,7 @@ function App() {
 
   function addCars(car){
     setCars([car,...cars]);
-    console.log(car.id);
+    //console.log(car.id);
   }
 
   function removeCar(id)
@@ -37,11 +40,26 @@ function App() {
 
   return (
     <div className="App">
+      <Router>
+
       <Header className='App-Header'/>
 
-      <h1>Hi</h1>
-      <CarForm addCars={addCars}/>
-      <CarList cars={cars} removeCar={removeCar}/>
+      <nav>
+      <Link to="/">Home </Link>
+      <Link to="/CarList">View List </Link>
+      
+      </nav>
+      {/* <CarForm addCars={addCars}/> */}
+      
+      
+      
+        <Routes>
+        <Route path='/' element={<CarForm addCars={addCars}/>} />
+          <Route path='/CarList' element={<CarList cars={cars} removeCar={removeCar} setUpdateId={setUpdateId} />} />
+          <Route path='/UpdateCar' element={<UpdateCar updateId={updateId} cars={cars} setCars={setCars} />} />
+        </Routes>
+      </Router>
+      {/* <CarList cars={cars} removeCar={removeCar}/> */}
     </div>
   );
 }

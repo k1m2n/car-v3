@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import {v4 as uuidv4} from "uuid";
+import {Button} from '@carbon/react';
 
 function carForm({addCars})
 {
@@ -65,7 +66,8 @@ function handleSubmit(e){
             <input value={car.phoneNo} onChange={handlephoneNo} placeholder="Enter phone Number" /><br/>
             <input value={car.fromTime} onChange={handleFromTime} placeholder="From" /><br/>
             <input value={car.toTime} onChange={handleToime} placeholder="To" />
-            <button type="submit">Submit</button>
+            {/* <button type="submit">Submit</button> */}
+            <Button type="submit">Submit</Button>
         </form>
             
         
