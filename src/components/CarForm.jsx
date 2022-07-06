@@ -1,20 +1,25 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import {v4 as uuidv4} from "uuid";
-import {Button} from '@carbon/react';
+import {Button,TextInput,Form,Stack,ToastNotification} from '@carbon/react';
+import axios from'axios';
+import { useNavigate } from "react-router-dom";
+import './style.scss';
 
 function carForm({addCars})
 {
+    const navigate=useNavigate();
 
     
     const[car, setCar] =useState({
         id:"",
-        email:"",
         regNo:"",
+        email:"",
         userName:"",
         phoneNo:"",
         fromTime:"",
-        toTime:""
+        toTime:"",
+        slotNo:""
 
     });
 
@@ -44,6 +49,10 @@ function handleToime(e)
 {
     setCar({...car,toTime:e.target.value});
 }
+function handleSlotNo(e)
+{
+    setCar({...car,slotNo:e.target.value});
+}
 
 function handleSubmit(e){
     e.preventDefault();
@@ -51,24 +60,50 @@ function handleSubmit(e){
         {
             //here ...todo means that the rest of the properties of the todo object stay same, the ID 
             //we generate
-            addCars({...car,id:uuidv4() });
+            car.id=uuidv4();
+            // addCars({...car,id:uuidv4() });
+            addCars(car);
+            console.log("On insering new car ",car.id);
+            axios.post('http://localhost:3000/car', car,{ mode: 'no-cors' })
+    .then(res => {
+      console.log(res.data)
+    })
+    .catch(err => {
+        console.log(err);
+      })
             //after we add the todo 
             // we reset the todo object (task input)
-            setCar({...car,email:"",userName:"",phoneNo:"",fromTime:"",toTime:"",regNo:""});
+            setCar({...car,email:"",userName:"",phoneNo:"",fromTime:"",toTime:"",regNo:"",slotNo:""});
         }
-}
+        
+        navigate('/');
+    }
 
     return(
-        <form onSubmit={handleSubmit}>
-            <input value={car.regNo} onChange={handleRegNo} placeholder="Enter car registration Number" /><br/>
-            <input value={car.email} onChange={handleEmail} placeholder="Enter emailID" /><br/>
-            <input value={car.userName} onChange={handluserName} placeholder="Enter username" /><br/>
-            <input value={car.phoneNo} onChange={handlephoneNo} placeholder="Enter phone Number" /><br/>
-            <input value={car.fromTime} onChange={handleFromTime} placeholder="From" /><br/>
-            <input value={car.toTime} onChange={handleToime} placeholder="To" />
+        <Stack gap={7}>
+        <Form onSubmit={handleSubmit}>
+            <div className="container">
+            <TextInput value={car.regNo} onChange={handleRegNo} placeholder="Enter car registration Number" required /><br/>
+            <TextInput type="email" value={car.email} onChange={handleEmail} placeholder="Enter emailID" required /><br/>
+            <TextInput value={car.userName} onChange={handluserName} placeholder="Enter username" required /><br/>
+            <TextInput value={car.phoneNo} onChange={handlephoneNo} placeholder="Enter phone Number" required/><br/>
+            <TextInput value={car.fromTime} onChange={handleFromTime} placeholder="From" required/><br/>
+            <TextInput value={car.toTime} onChange={handleToime} placeholder="To" required /><br/>
+            <TextInput value={car.slotNo} onChange={handleSlotNo} placeholder="Slot No." required/>
             {/* <button type="submit">Submit</button> */}
             <Button type="submit">Submit</Button>
-        </form>
+            <ToastNotification
+        caption="00:00:00 AM"
+        iconDescription="describes the close button"
+        timeout={0}
+        title="Notification title"
+        status="Success"
+        color="green"
+        kind="success"
+      />
+            </div>
+        </Form>
+        </Stack>
             
         
     );

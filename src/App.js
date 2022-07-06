@@ -1,17 +1,26 @@
 /*eslint-disable*/
 import './App.scss';
 import CarForm from './components/CarForm';
-import Header from './components/Header';
+// import Header from './components/Header';
 import {useEffect,useState} from "react";
 import CarList from './components/CarList';
 import {BrowserRouter as Router, Routes,Route,Link} from 'react-router-dom'
 import UpdateCar from './components/UpdateCar';
+import ViewCar from './components/ViewCar';
+import {
+  Header,
+  HeaderName,
+  HeaderNavigation,
+  HeaderMenu,
+  HeaderMenuItem
+} from "carbon-components-react";
 
 function App() {
 
   const LOCAL_STORAGE_KEY="react-park-list";
   const [cars, setCars]=useState([]);
   const[updateId,setUpdateId]=useState("");
+  const[viewCarId,setViewCarId]=useState("");
 
 
   useEffect(()=>{
@@ -42,11 +51,19 @@ function App() {
     <div className="App">
       <Router>
 
-      <Header className='App-Header'/>
+      {/* <Header className='App-Header'/> */}
+      <Header aria-label="IBM Platform Name">
+      <HeaderName href="#" prefix="IBM">
+        [Platform]
+      </HeaderName>
+      <HeaderNavigation aria-label="IBM [Platform]">
+        <HeaderMenuItem href="/">Home</HeaderMenuItem>
+        </HeaderNavigation>
+        </Header>
 
       <nav>
       <Link to="/">Home </Link>
-      <Link to="/CarList">View List </Link>
+      {/* <Link to="/CarList">View Car List </Link> */}
       
       </nav>
       {/* <CarForm addCars={addCars}/> */}
@@ -54,9 +71,11 @@ function App() {
       
       
         <Routes>
-        <Route path='/' element={<CarForm addCars={addCars}/>} />
-          <Route path='/CarList' element={<CarList cars={cars} removeCar={removeCar} setUpdateId={setUpdateId} />} />
+        <Route path='/AddNew' element={<CarForm addCars={addCars}/>} />
+        <Route path='/' element={<CarList cars={cars} removeCar={removeCar} setUpdateId={setUpdateId} setViewCarId={setViewCarId} />} />
+          {/* <Route path='/CarList' element={<CarList cars={cars} removeCar={removeCar} setUpdateId={setUpdateId} setViewCarId={setViewCarId} />} /> */}
           <Route path='/UpdateCar' element={<UpdateCar updateId={updateId} cars={cars} setCars={setCars} />} />
+          <Route path='/ViewCar' element={<ViewCar viewCarId={viewCarId} cars={cars}/>}/>
         </Routes>
       </Router>
       {/* <CarList cars={cars} removeCar={removeCar}/> */}
